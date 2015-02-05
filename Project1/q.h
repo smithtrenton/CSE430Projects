@@ -1,5 +1,5 @@
-#ifndef q
-#define q
+#ifndef queue
+#define queue
 #include <stdlib.h>
 
 typedef struct queue queue;
