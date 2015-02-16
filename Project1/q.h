@@ -18,19 +18,15 @@ void FreeItem(queue** item) {
 }
 
 void InitQueue(queue** head) {
-	*head = NewItem();
-	(*head)->next = NULL;
-	(*head)->prev = NULL;
-	(*head)->payload = -1;
+	*head = NULL;
 }
 
 void AddQueue(queue** head, queue* item) {
 	queue* temp = *head;
-	if (temp->next == NULL) {
-		temp->payload = item->payload;
-		temp->next = temp;
-		temp->prev = temp;
-		FreeItem(&item);		
+	if (temp == NULL) {
+		*head = item;	
+		(*head)->next = *head;
+		(*head)->prev = *head;
 	} else if (temp->next == temp) {		
 		temp->next = item;
 		temp->prev = item;
@@ -47,22 +43,24 @@ void AddQueue(queue** head, queue* item) {
 }
 
 queue* DelQueue(queue** head) {
-	queue* delete = *head;
-	if (delete->next == delete) {
+	queue* del = *head;
+	if (del->next == del) {
 		*head = NULL;
 	} else {
-		while (delete->next != *head) {
-			delete = delete->next;
+		while (del->next != *head) {
+			del = del->next;
 		}
-		delete->prev->next = delete->next;
-		delete->next->prev = delete->prev;
+		del->prev->next = del->next;
+		del->next->prev = del->prev;
 	}
-	return delete;
+	return del;
 }
 
 void RotQueue(queue** head) {
-	queue* temp = *head;
-	*head = temp->next;
+	if (head != NULL) {
+		queue* temp = *head;
+		*head = temp->next;
+	}
 }	
 
 void PrintQueue(queue* head) {

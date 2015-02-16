@@ -22,15 +22,12 @@ int main() {
 
 	puts("\nadding elements");
 	AddQueue(&head, q);
-	q = NULL;
 	PrintQueue(head);
 	puts("\n");
 	AddQueue(&head, q2);
-	q2 = NULL;
 	PrintQueue(head);
 	puts("\n");
 	AddQueue(&head, q3);
-	q3 = NULL;
 	PrintQueue(head);
 	
 	puts("\nrotating elements");
