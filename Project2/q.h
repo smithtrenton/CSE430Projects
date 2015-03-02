@@ -58,4 +58,21 @@ void RotQueue(TCB_t** head) {
 	}
 }
 
+void printQueue(TCB_t *headPtr) {
+	if (headPtr == NULL) {
+		puts("head is null");
+		return;
+	}
+
+	if (headPtr->next == headPtr) {
+		printf("%p : \n", headPtr);
+	} else {
+		TCB_t *current = headPtr;
+		do {
+			printf("%p : \n", current);
+			current = current->next;
+		} while (current != headPtr);
+	}
+}
+
 #endif
