@@ -11,6 +11,34 @@ void start_thread(void (*function)(void)) {
 	call addQ to add this TCB into the “RunQ” which is a global header pointer
 	
 	end pseudo code*/
+	
+	void *stackptr = (void *)malloc (8192);
+	TCB_t *tcb = (TCB_t *)malloc (sizeof(TCB_t));
+	init_TCB(tcb,&function,stackptr,8192);
+
+	InitQueue(&runQ);
+	TCB_t  *q1;
+	InitQueue(&runQ);
+
+	//add an element
+	q1 = NewItem();
+	AddQueue(&runQ,q1);
+	if(runQ== NULL){
+		puts("init failed...");
+		return;
+	}
+	printQueue(runQ);
+	puts("add1");
+
+	//add this tcb
+	AddQueue(&runQ, tcb);
+	printQueue(runQ);
+	puts("done..");
+
+	free(q1);
+	free(stackptr);
+	free(tcb);
+	
 }
 
 void run() {
