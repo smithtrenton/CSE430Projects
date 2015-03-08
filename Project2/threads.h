@@ -1,6 +1,9 @@
 #ifndef THREADS_HEADER
 #define THREADS_HEADER
 #include "q.h"
+#include <stdio.h>
+
+TCB_t *runQ;
 
 void start_thread(void (*function)(void)) {
 	/* begin pseudo code
@@ -11,7 +14,7 @@ void start_thread(void (*function)(void)) {
 	call addQ to add this TCB into the “RunQ” which is a global header pointer
 	
 	end pseudo code*/
-	
+
 	void *stackptr = (void *)malloc (8192);
 	TCB_t *tcb = (TCB_t *)malloc (sizeof(TCB_t));
 	init_TCB(tcb,&function,stackptr,8192);
@@ -38,7 +41,7 @@ void start_thread(void (*function)(void)) {
 	free(q1);
 	free(stackptr);
 	free(tcb);
-	
+
 }
 
 void run() {
@@ -53,5 +56,7 @@ void yield() {
    //rotate the run Q;
    //swap the context, from previous thread to the thread pointed to by RunQ
 }
+
+
 
 #endif
