@@ -1,63 +1,40 @@
 #include "threads.h"
-TCB_t *runQ;
 
-void fun1();
-void fun2();
-void fun3();
+#define NUM_THREADS 15
+TCB_t *runQ;
+int count = 0;
+
+void test();
 
 void main(char** args) {
 
-	TCB_t mainc;
-	TCB_t* t1;
-	TCB_t* t2;
-	TCB_t* t3;
+	TCB_t* threads[NUM_THREADS];
 
 	InitQueue(&runQ);
 
-	/*	getcontext(&t1);
-	 getcontext(&ha);
-	 t1.context.uc_link = &(ha);
-	 t1.context.uc_stack.ss_sp = stack;
-	 t1.context.uc_stack.ss_size = sizeof(stack);
-	 makecontext(&t1,&testfunction,0);*/
+	/*	start_thread(t1, fun1); //note: no need to pass &testfunction
+	 start_thread(t2, fun2);
+	 start_thread(t3, fun3);*/
+	int i = 0;
+	for (i = 0; i < NUM_THREADS; i++) {
+		start_thread(threads[i], test); //note: no need to pass &testfunction
+	}
 
-	start_thread(t1, fun1); //note: no need to pass &testfunction
-	start_thread(t2, fun2);
-	start_thread(t3, fun3);
 	puts("run");
-	getcontext(&mainc);
-	t1 = runQ;
-	t2 = runQ->next;
-	/*	runQ->context.uc_link = &(runQ->next->context);
-	 runQ->next->context.uc_link = &mainc;*/
+
 	run();
 
 	puts("ok");
 }
 
-void fun1() {
-
-	puts("This is the test function1... ");
-	puts("switch to 2");
-
-	yield();
-	puts("fun1 exiting");
-}
-
-void fun2() {
-
-	puts("This is the test function2... ");
-	puts("switch to 3");
-
-	yield();
-	puts("fun2 exiting");
-}
-
-void fun3() {
-
-	puts("This is the test function3... ");
-	puts("switch to 1");
-	yield();
-
-	puts("fun3 exiting");
+void test() {
+	while (count < 100) {
+		printf("This is the test function %d... \n", count);
+		puts("switching");
+		count++;
+		yield();
+		//swapcontext(&(t3->context),&(t1->context));
+		puts("function exiting");
+	}
+	puts("function end");
 }
