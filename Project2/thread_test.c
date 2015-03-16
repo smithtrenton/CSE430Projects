@@ -1,40 +1,58 @@
 #include "threads.h"
 
-#define NUM_THREADS 15
-TCB_t *runQ;
+#define NUM_THREADS 10
+#define SWAP_COUNT 100
 int count = 0;
+int thread_ints[NUM_THREADS];
+TCB_t *runQ = 0;
 
-void test();
+void test1();
+void test2();
 
 void main(char** args) {
 
 	TCB_t* threads[NUM_THREADS];
 
-	InitQueue(&runQ);
 
-	/*	start_thread(t1, fun1); //note: no need to pass &testfunction
-	 start_thread(t2, fun2);
-	 start_thread(t3, fun3);*/
+	printf("Initializing %d threads\n", NUM_THREADS);
+	InitQueue(&runQ);
 	int i = 0;
 	for (i = 0; i < NUM_THREADS; i++) {
-		start_thread(threads[i], test); //note: no need to pass &testfunction
+		start_thread(threads[i], (i%2==1) ? test1 : test2); 
 	}
+	
+	puts("runQ content: ");
+	printQueue(runQ);
 
-	puts("run");
+	puts("\nStarting threads\n");
 
 	run();
 
-	puts("ok");
+	puts("Run ended");
 }
 
-void test() {
-	while (count < 100) {
-		printf("This is the test function %d... \n", count);
-		puts("switching");
+void test1() {
+	while (count <= SWAP_COUNT) {
+		printf("test1 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
+			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
+		puts("Swapping");
 		count++;
+		thread_ints[count%NUM_THREADS]++;
 		yield();
-		//swapcontext(&(t3->context),&(t1->context));
-		puts("function exiting");
+		puts("SHOULD NOT PRINT");
 	}
-	puts("function end");
+	puts("Loop end");
+}
+
+void test2() {
+	while (count <= SWAP_COUNT) {
+		printf("test2 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
+			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
+		puts("Swapping");
+		count++;
+		thread_ints[count%NUM_THREADS]++;
+		yield();
+		puts("SHOULD NOT PRINT");
+	}
+	puts("Loop end");
 }
