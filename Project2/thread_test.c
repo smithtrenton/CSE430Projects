@@ -1,7 +1,6 @@
 #include "threads.h"
 
 #define NUM_THREADS 10
-#define SWAP_COUNT 100
 int count = 0;
 int thread_ints[NUM_THREADS];
 TCB_t *runQ = 0;
@@ -32,7 +31,7 @@ void main(char** args) {
 }
 
 void test1() {
-	while (count <= SWAP_COUNT) {
+	while (count >= 0) {
 		printf("test1 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
 			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
 		puts("Swapping");
@@ -45,7 +44,7 @@ void test1() {
 }
 
 void test2() {
-	while (count <= SWAP_COUNT) {
+	while (count >= 0) {
 		printf("test2 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
 			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
 		puts("Swapping");
