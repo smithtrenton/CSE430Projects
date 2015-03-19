@@ -1,3 +1,10 @@
+/* 
+ * 
+ * CSE 430 
+ * Project 2
+ * Authors: Trenton Smith, Junyu Chen
+ *  
+ */
 #include "threads.h"
 
 #define NUM_THREADS 10
