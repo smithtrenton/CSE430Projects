@@ -19,12 +19,11 @@ void main(char** args) {
 
 	TCB_t* threads[NUM_THREADS];
 
-
 	printf("Initializing %d threads\n", NUM_THREADS);
 	InitQueue(&runQ);
 	int i = 0;
 	for (i = 0; i < NUM_THREADS; i++) {
-		start_thread(threads[i], (i%2==1) ? test1 : test2); 
+		start_thread(threads[i], (i%2 == 1) ? test1 : test2); 
 	}
 	
 	puts("runQ content: ");
@@ -38,9 +37,12 @@ void main(char** args) {
 }
 
 void test1() {
+	int i = 0;
 	while (count >= 0) {
 		printf("test1 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
 			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
+		printf("i: %d\n", i);
+		i++;
 		puts("Swapping");
 		count++;
 		thread_ints[count%NUM_THREADS]++;
@@ -51,9 +53,12 @@ void test1() {
 }
 
 void test2() {
+	int x = 0;
 	while (count >= 0) {
 		printf("test2 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
 			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
+		printf("x: %d\n", x);
+		x++;
 		puts("Swapping");
 		count++;
 		thread_ints[count%NUM_THREADS]++;
