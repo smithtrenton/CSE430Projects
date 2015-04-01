@@ -1,6 +1,5 @@
 #ifndef QUEUE_HEADER
 #define QUEUE_HEADER
-#include <stdlib.h>
 #include "tcb.h"
 
 TCB_t* NewItem() {

@@ -7,9 +7,8 @@
  */
 #include "threads.h"
 
-#define NUM_THREADS 10
+#define NUM_THREADS 3
 int count = 0;
-int thread_ints[NUM_THREADS];
 TCB_t *runQ = 0;
 
 void test1();
@@ -23,7 +22,7 @@ void main(char** args) {
 	InitQueue(&runQ);
 	int i = 0;
 	for (i = 0; i < NUM_THREADS; i++) {
-		start_thread(threads[i], (i%2 == 1) ? test1 : test2); 
+		start_thread(threads[i], (i%2 == 0) ? test1 : test2); 
 	}
 	
 	puts("runQ content: ");
@@ -39,31 +38,27 @@ void main(char** args) {
 void test1() {
 	int i = 0;
 	while (count >= 0) {
-		printf("test1 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
-			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
-		printf("i: %d\n", i);
-		i++;
-		puts("Swapping");
+		printf("test1 = Swapped %d : CurrentThread %p : Visited %d \n", 
+			count, runQ, ++i);
 		count++;
-		thread_ints[count%NUM_THREADS]++;
+		sleep(1);
+		puts("test1 - swapping"); 
 		yield();
-		puts("SHOULD NOT PRINT");
+		puts("test1 - post yield");
 	}
-	puts("Loop end");
+	puts("test1 - loop end");
 }
 
 void test2() {
 	int x = 0;
 	while (count >= 0) {
-		printf("test2 = Swapped %d : CurrentThread %d/%p : Visited %d \n", 
-			count, count%NUM_THREADS, runQ, thread_ints[count%NUM_THREADS]);
-		printf("x: %d\n", x);
-		x++;
-		puts("Swapping");
+		printf("test2 = Swapped %d : CurrentThread %p : Visited %d \n", 
+			count, runQ, ++x);
 		count++;
-		thread_ints[count%NUM_THREADS]++;
+		sleep(1);
+		puts("test2 - swapping");
 		yield();
-		puts("SHOULD NOT PRINT");
+		puts("test2 - post yield");
 	}
-	puts("Loop end");
+	puts("test2 - loop end");
 }
