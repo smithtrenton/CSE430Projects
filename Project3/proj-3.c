@@ -24,10 +24,10 @@ void method1_1();
 void method2();
 
 void main(char** args) {
-	//method 1
+	//uncomment method1(); to run method 1 test
 	//method1();	
 	
-	//method 2
+	//uncomment method2(); to run method 2 test
 	method2();
 }
 
@@ -92,7 +92,7 @@ void method2() {
 	InitQueue(&runQ);	
 	int i = 0;
 	while (i < 4) {
-		start_thread(threads[i], (i%2 == 0) ? producer : consumer);
+		start_thread(threads[i], i >= 2 ? producer : consumer);
 		i++;
 	}	
 	srand(time(NULL));

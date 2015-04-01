@@ -5,24 +5,23 @@
 
 typedef struct SEM_t {
      struct TCB_t   *queue;
-     int			value;
+     int			count;
 } SEM_t;
 
-void InitSem(SEM_t* sem, int v) {
+void InitSem(SEM_t* sem, int c) {
 	sem->queue = NULL;
-	sem->value = v;
+	sem->count = c;
 }
 
 void P(SEM_t* sem) {
-	sem->value--;
-	if (sem->value < 0) {
-		puts("blocking");
+	if (sem->count > 0) {
+		sem->count--;
+	} else {
+		RotQueue(&runQ);
 		TCB_t *current = DelQueue(&runQ);
 		AddQueue(&(sem->queue), current);
-		puts("sem->queue:");
-		printQueue(sem->queue);
 		if (runQ == NULL) {
-			puts("runQ empty");
+			puts("\nrunQ empty");
 			while (runQ == NULL) {
 				sleep(1);
 			}
@@ -36,12 +35,10 @@ void P(SEM_t* sem) {
 }
 
 void V(SEM_t* sem) {
-	sem->value++;
-	if (sem->value <= 0) {
-		puts("unblocking");
+	sem->count++;
+	if (sem->queue != NULL) {
+		RotQueue(&(sem->queue));
 		AddQueue(&runQ, DelQueue(&(sem->queue)));
-		puts("sem->queue:");
-		printQueue(sem->queue);
 	}
 	yield();
 }

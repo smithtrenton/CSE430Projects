@@ -35,7 +35,7 @@ void yield() {
 	//rotate the run Q;
 	//swap the context, from previous thread to the thread pointed to by RunQ
 	RotQueue(&runQ);
-	int t = setcontext(&(runQ->context));  //switch to next context
+	int t = setcontext(&(runQ->context)); //switch to next context
 	if (t == -1) {
 		puts("set error!");
 		return;
