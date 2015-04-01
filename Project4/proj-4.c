@@ -58,13 +58,17 @@ void main(char** args) {
 }
 
 void reader() {
-	puts("r");
-	reader_entry();
-	
-	printf("Reader[%p]: %d\n", runQ, shared_int);
-	sleep(1);
-	
-	reader_exit();
+	while (1 > 0) {
+		puts("r");
+		reader_entry();
+		
+		P(mutex);
+		printf("Reader[%p]: %d\n", runQ, shared_int);
+		sleep(1);
+		V(mutex);
+		
+		reader_exit();
+	}
 }
 
 void reader_entry() {
@@ -90,14 +94,18 @@ void reader_exit() {
 }
 
 void writer() {
-	puts("w");
-	writer_entry();
-	
-	shared_int = rand();
-	printf("Writer[%p]: %d\n", runQ, shared_int);
-	sleep(1);
-	
-	writer_exit();
+	while (1 > 0) {
+		puts("w");
+		writer_entry();
+		
+		P(mutex);
+		shared_int = rand();
+		printf("Writer[%p]: %d\n", runQ, shared_int);
+		sleep(1);
+		V(mutex);
+		
+		writer_exit();
+	}
 }
 
 void writer_entry() {

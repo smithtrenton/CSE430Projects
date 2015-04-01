@@ -1,8 +1,6 @@
 #ifndef QUEUE_HEADER
 #define QUEUE_HEADER
 #include "tcb.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 TCB_t* NewItem() {
 	return (TCB_t*)malloc(sizeof(TCB_t));
