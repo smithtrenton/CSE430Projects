@@ -1,13 +1,17 @@
 #ifndef TCB_HEADER
 #define TCB_HEADER
 #include <ucontext.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 typedef struct TCB_t {
      struct TCB_t     *next;
      struct TCB_t     *prev;
-     ucontext_t      context;
+     ucontext_t     context;
 } TCB_t;
+
+
 
 void init_TCB (TCB_t *tcb, void *function, void *stackP, int stack_size)
 {

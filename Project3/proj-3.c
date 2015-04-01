@@ -32,21 +32,26 @@ void main(char** args) {
 }
 
 void producer() {
-	P(empty_sem);
-	buffer[in] = rand();
-	printf("%p produced: %d at buffer[%d]\n", runQ, buffer[in], in);
-	sleep(1);
-	in = (in+1) % BUFFER_SIZE;
-	V(full_sem);
+	while (1 > 0) {
+		P(empty_sem);
+		buffer[in] = rand();
+		printf("%p produced: %d at buffer[%d]\n", runQ, buffer[in], in);
+		sleep(1);
+		in = (in+1) % BUFFER_SIZE;
+		V(full_sem);
+	}
 }
 
 void consumer() {
-	P(full_sem);
-	printf("%p consumed: %d at buffer[%d]\n", runQ, buffer[out], out);
-	buffer[out] = -1;
-	sleep(1);
-	out = (out+1) % BUFFER_SIZE;
-	V(empty_sem);
+	while (1 > 0) {
+		P(full_sem);
+		printf("%p consumed: %d at buffer[%d]\n", runQ, buffer[out], out);
+		buffer[out] = -1;
+		sleep(1);
+		out = (out+1) % BUFFER_SIZE;
+		V(empty_sem);
+	}
+	
 }
 
 void method1() {
@@ -69,15 +74,15 @@ void method1() {
 void method1_1() {
 	int y = 0;
 	while (y >= 0) {		
-		printf("thread: %p\n", runQ);
-		puts("attempting entry");
+		printf("thread: %p\tp\n", runQ);
 		P(cs_sem);
-		puts("entered");
-		printf("method1_count: %d\n", method1_count++);
-		printf("y: %d\n", y++);
+		printf("thread: %p\tin\n", runQ);
+		printf("thread: %p\tmethod1_count: %d\n", runQ, method1_count++);
+		printf("thread: %p\tlocal count: %d\n", runQ, y++);
 		sleep(1);
+		printf("thread: %p\tv\n", runQ);
 		V(cs_sem);
-		puts("cs end");
+		printf("thread: %p\tcs end\n", runQ);
 		sleep(1);
 	}
 }
