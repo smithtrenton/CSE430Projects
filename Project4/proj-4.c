@@ -3,8 +3,6 @@
  * CSE 430 
  * Project 4
  * Authors: Trenton Smith, Junyu Chen
- * 
- * NOTE: Solution code is version 2 from lecture notes!
  *  
  */
 #include "sem.h"
