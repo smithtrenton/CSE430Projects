@@ -14,9 +14,8 @@ void InitSem(SEM_t* sem, int c) {
 }
 
 void P(SEM_t* sem) {
-	if (sem->count > 0) {
-		sem->count--;
-	} else {
+	sem->count--;
+	if (sem->count < 0) {
 		RotQueue(&runQ);
 		TCB_t *current = DelQueue(&runQ);
 		AddQueue(&(sem->queue), current);
@@ -26,11 +25,7 @@ void P(SEM_t* sem) {
 				sleep(1);
 			}
 		}
-		int t = setcontext(&(runQ->context));
-		if (t == -1) {
-			puts("set error!");
-			return;
-		}
+		swapcontext(&(current->context), &(runQ->context));
 	}
 }
 

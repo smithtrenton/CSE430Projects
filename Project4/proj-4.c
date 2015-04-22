@@ -75,31 +75,37 @@ void reader() {
 }
 
 void reader_entry() {
+	P(mutex);
 	if (wwc > 0 || wc > 0) {
 		rwc++;
+		V(mutex);
 		printf("Reader[%p]: Adding to wait queue\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		P(rsem);
 		rwc--;
 		printf("Reader[%p]: Returned from wait queue\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 	}
 	rc++;
 	if (rwc > 0) {
 		printf("Reader[%p]: Releasing a reader\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(rsem);
+	} else {
+		V(mutex);
 	}
 }
 
 void reader_exit() {
+	P(mutex);
 	rc--;
 	if (rc == 0 && wwc > 0) {
 		printf("Reader[%p]: Releasing a writer\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(wsem);
+	} else {
+		V(mutex);
 	}
-	yield();
 }
 
 void writer() {
@@ -121,29 +127,32 @@ void writer() {
 }
 
 void writer_entry() {
+	P(mutex);
 	if (rc > 0 || wc > 0) {
 		wwc++;
+		V(mutex);
 		printf("Writer[%p]: Adding to wait queue\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		P(wsem);
 		wwc--;
 		printf("Writer[%p]: Returned from wait queue\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 	}
 	wc++;
+	V(mutex);
 }
 
 void writer_exit() {
+	P(mutex);
 	wc--;
 	if (rwc > 0) {
 		printf("Writer[%p]: Releasing a reader\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(rsem);
 	}
 	else if (wwc > 0) {
 		printf("Writer[%p]: Releasing a writer\n", runQ);
-		printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
+		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(wsem);
 	}
-	yield();
 }
