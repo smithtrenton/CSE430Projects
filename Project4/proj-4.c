@@ -27,6 +27,7 @@ void writer_exit();
 void main(char** args) {
 	TCB_t* threads[READER_COUNT + WRITER_COUNT];
 	puts("initializing semaphores and threads");
+	srand(time(NULL));
 	mutex = malloc(sizeof(SEM_t));
 	rsem = malloc(sizeof(SEM_t));
 	wsem = malloc(sizeof(SEM_t));
@@ -48,7 +49,6 @@ void main(char** args) {
 			i++; h++;
 		}
 	}
-	srand(time(NULL));
 	puts("runQ content:");
 	printQueue(runQ);
 	puts("\nstarting threads\n");
