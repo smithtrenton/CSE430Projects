@@ -59,18 +59,18 @@ void main(char** args) {
 
 void reader() {
 	while (1 > 0) {
-		printf("Reader[%p]: Start\n", runQ);
+		//printf("Reader[%p]: Start\n", runQ);
 		reader_entry();
-		printf("Reader[%p]: Entered\n", runQ);
+		//printf("Reader[%p]: Entered\n", runQ);
 		
 		P(mutex);
 		printf("Reader[%p]: %d\n", runQ, shared_int);
 		sleep(1);
 		V(mutex);
 		
-		printf("Reader[%p]: Exiting\n", runQ);
+		//printf("Reader[%p]: Exiting\n", runQ);
 		reader_exit();
-		printf("Reader[%p]: Exit\n", runQ);
+		//printf("Reader[%p]: Exit\n", runQ);
 	}
 }
 
@@ -79,16 +79,16 @@ void reader_entry() {
 	if (wwc > 0 || wc > 0) {
 		rwc++;
 		V(mutex);
-		printf("Reader[%p]: Adding to wait queue\n", runQ);
+		//printf("Reader[%p]: Adding to wait queue\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		P(rsem);
 		rwc--;
-		printf("Reader[%p]: Returned from wait queue\n", runQ);
+		//printf("Reader[%p]: Returned from wait queue\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 	}
 	rc++;
 	if (rwc > 0) {
-		printf("Reader[%p]: Releasing a reader\n", runQ);
+		//printf("Reader[%p]: Releasing a reader\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(rsem);
 	} else {
@@ -100,7 +100,7 @@ void reader_exit() {
 	P(mutex);
 	rc--;
 	if (rc == 0 && wwc > 0) {
-		printf("Reader[%p]: Releasing a writer\n", runQ);
+		//printf("Reader[%p]: Releasing a writer\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(wsem);
 	} else {
@@ -110,9 +110,9 @@ void reader_exit() {
 
 void writer() {
 	while (1 > 0) {
-		printf("Writer[%p]: Start\n", runQ);
+		//printf("Writer[%p]: Start\n", runQ);
 		writer_entry();
-		printf("Writer[%p]: Entered\n", runQ);
+		//printf("Writer[%p]: Entered\n", runQ);
 		
 		P(mutex);
 		shared_int = rand();
@@ -120,9 +120,9 @@ void writer() {
 		sleep(1);
 		V(mutex);
 		
-		printf("Writer[%p]: Exiting\n", runQ);
+		//printf("Writer[%p]: Exiting\n", runQ);
 		writer_exit();
-		printf("Writer[%p]: Exit\n", runQ);
+		//printf("Writer[%p]: Exit\n", runQ);
 	}
 }
 
@@ -131,11 +131,11 @@ void writer_entry() {
 	if (rc > 0 || wc > 0) {
 		wwc++;
 		V(mutex);
-		printf("Writer[%p]: Adding to wait queue\n", runQ);
+		//printf("Writer[%p]: Adding to wait queue\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		P(wsem);
 		wwc--;
-		printf("Writer[%p]: Returned from wait queue\n", runQ);
+		//printf("Writer[%p]: Returned from wait queue\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 	}
 	wc++;
@@ -146,12 +146,12 @@ void writer_exit() {
 	P(mutex);
 	wc--;
 	if (rwc > 0) {
-		printf("Writer[%p]: Releasing a reader\n", runQ);
+		//printf("Writer[%p]: Releasing a reader\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(rsem);
 	}
 	else if (wwc > 0) {
-		printf("Writer[%p]: Releasing a writer\n", runQ);
+		//printf("Writer[%p]: Releasing a writer\n", runQ);
 		//printf("\t(wwc:%d, wc:%d, rwc:%d, rc:%d)\n", wwc, wc, rwc, rc);
 		V(wsem);
 	}
